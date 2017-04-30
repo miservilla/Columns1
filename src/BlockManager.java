@@ -65,7 +65,8 @@ public class BlockManager {
                     board[row + i][col] = piece[i];
                 }
                 System.out.println(game.toString());
-                game.getBoardList();
+                GameBoardGUI.Grid.fillCell(game.getBoardList());
+                GameBoardGUI.
                 board[row][col] = '-';
                 tmpRow = row;
                 row++;
@@ -74,6 +75,7 @@ public class BlockManager {
             Search.search(board);
             System.out.println("\nAfter blocks fall...");
             System.out.println(game.toString());
+//            GameBoardGUI.Grid.fillCell(game.getBoardList());
             System.out.println("Number of blocks removed " +
                     Search.getBlocksRemoved() + ".");
             Search.setBlocksRemoved();
