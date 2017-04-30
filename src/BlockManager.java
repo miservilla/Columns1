@@ -56,7 +56,6 @@ public class BlockManager {
     public void dropPiece(BlockManager game) {
         int col = 0;
         while (!isFull(col)) {
-            int a = 0;
             int tmpRow = 0;
             col = num.nextInt(COL);
             char[] piece = PieceMaker.getPiece();
