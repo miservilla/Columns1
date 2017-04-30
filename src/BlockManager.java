@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.ServiceConfigurationError;
 
 /**
  * @author Michael Servilla
@@ -13,6 +12,7 @@ public class BlockManager {
     private static final int ROW = 16;
     private static final int COL = 10;
     private ArrayList<String> boardList;
+    public GameBoardGUI.Grid grid = new GameBoardGUI.Grid();
 
 
     /**
@@ -65,8 +65,8 @@ public class BlockManager {
                     board[row + i][col] = piece[i];
                 }
                 System.out.println(game.toString());
-                GameBoardGUI.Grid.fillCell(game.getBoardList());
-                GameBoardGUI.
+                grid.fillCell(game.getBoardList());
+                GameBoardGUI.setScoreLabel("Current score: " + Search.getScore());
                 board[row][col] = '-';
                 tmpRow = row;
                 row++;
@@ -82,6 +82,8 @@ public class BlockManager {
             System.out.println("Current score " + Search.getScore() + ".");
         }
         System.out.println("Column is full!");
+        GameBoardGUI.endOfGameDialog();
+        System.exit(0);
     }
 
 

@@ -1,24 +1,32 @@
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
-import java.util.ArrayList;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.*;
 
 /**
  * @author Michael Servilla
  * @version date 2017-04-30
  */
 public class GameBoardGUI extends JFrame {
-    private JFrame mainFrame = new JFrame("COLUMNS");
+    private static JFrame mainFrame = new JFrame("COLUMNS");
     private JPanel mainPanel = new JPanel(new BorderLayout());
     private JPanel topPanel = new JPanel();
     private JPanel bottomPanel = new JPanel();
     private JPanel gameBoard = new JPanel(new BorderLayout());
-    private JLabel scoreLabel = new JLabel("Score: ");
-    private JButton startButton = new JButton("Start");
-    private JButton pauseButton = new JButton("Pause");
+    private static JLabel scoreLabel = new JLabel("Score: ");
+    private static JButton startButton = new JButton("Start");
+    private static JButton pauseButton = new JButton("Pause");
     private Grid grid = new Grid();
+    private BlockManager game = new BlockManager();
+    private static Timer timer;
+
 
 
     public GameBoardGUI() {
+        startButton.setBackground(Color.GREEN);
+
         mainPanel.setBackground(Color.black);
         mainPanel.add(topPanel, BorderLayout.PAGE_START);
         mainPanel.add(gameBoard, BorderLayout.CENTER);
@@ -43,9 +51,41 @@ public class GameBoardGUI extends JFrame {
         mainFrame.setResizable(false);
         mainFrame.setVisible(true);
 
-        BlockManager game = new BlockManager();
-        game.dropPiece(game);
+        grid.fillCell(game.getBoardList());
 
+//        game.dropPiece(game);
+
+        startButton.addActionListener(e -> GameBoardGUI.startTimer());
+
+        pauseButton.addActionListener(e -> GameBoardGUI.stopTimer());
+
+        timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                game.dropPiece(game);
+            }
+        });
+    }
+
+    public static void setScoreLabel(String scoreLabelText) {
+        scoreLabel.setText(scoreLabelText);
+    }
+
+    public static void endOfGameDialog() {
+        JOptionPane.showMessageDialog(mainFrame, "GAME OVER!  Final " +
+                "Score: " + Search.getScore());
+    }
+
+    public static void startTimer() {
+        timer.start();
+        startButton.setBackground(Color.LIGHT_GRAY);
+        pauseButton.setBackground(Color.RED);
+    }
+
+    public static void stopTimer() {
+        timer.stop();
+        startButton.setBackground(Color.GREEN);
+        pauseButton.setBackground(Color.LIGHT_GRAY);
     }
 
     public static class Grid extends JPanel {
@@ -81,9 +121,9 @@ public class GameBoardGUI extends JFrame {
                 g.drawLine(10, i, 510, i);
             }
         }
-        public static void fillCell(ArrayList gridList) {
+        public void fillCell(ArrayList gridList) {
             fillCells = new ArrayList(gridList);
-//            repaint();
+            repaint();
         }
 
         Color getColor( String colorCode) {
