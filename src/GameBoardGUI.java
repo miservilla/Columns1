@@ -23,6 +23,9 @@ public class GameBoardGUI extends JFrame implements ActionListener, KeyListener 
     public static Grid grid = new Grid();
     private BlockManager game = new BlockManager();
     private static Timer timer;
+    private static int colOffset;
+    private static int dropDown;
+    private static int pieceRotate;
 
 
 
@@ -87,6 +90,16 @@ public class GameBoardGUI extends JFrame implements ActionListener, KeyListener 
         pauseButton.setBackground(Color.LIGHT_GRAY);
     }
 
+    public static int getColOffset() {
+        return colOffset;
+    }
+    public static int getDropDown() {
+        return dropDown;
+    }
+    public static int getPieceRotate() {
+        return pieceRotate;
+    }
+
     @Override
     public void keyTyped(KeyEvent e) {
 
@@ -94,6 +107,20 @@ public class GameBoardGUI extends JFrame implements ActionListener, KeyListener 
 
     @Override
     public void keyPressed(KeyEvent e) {
+        setFocusable(true);
+        int code = e.getKeyCode();
+        if (code == KeyEvent.VK_RIGHT) {
+            colOffset = 1;
+        }
+        if (code == KeyEvent.VK_LEFT) {
+            colOffset = -1;
+        }
+        if (code == KeyEvent.VK_UP) {
+            pieceRotate = 1;
+        }
+        if (code == KeyEvent.VK_DOWN) {
+            dropDown = 1;
+        }
 
     }
 
@@ -142,6 +169,7 @@ public class GameBoardGUI extends JFrame implements ActionListener, KeyListener 
         }
         public void fillCell(ArrayList gridList) {
             fillCells = new ArrayList(gridList);
+            setFocusable(true);
             repaint();
         }
 

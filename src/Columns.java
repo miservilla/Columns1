@@ -10,7 +10,7 @@ public class Columns {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                GameBoardGUI gameBoard = new GameBoardGUI();
+                GameBoardGUI colums = new GameBoardGUI();
             }
         });
     }

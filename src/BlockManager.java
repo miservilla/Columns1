@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -9,8 +10,8 @@ public class BlockManager {
 
     private char[][] board; //2D array for board.
     private static Random num = new Random(); //Number generator for piece making and column drop.
-    private static final int ROW = 16;
-    private static final int COL = 10;
+    private static final int ROW = 6;
+    private static final int COL = 6;
     private ArrayList<String> boardList;
 
 
@@ -53,17 +54,28 @@ public class BlockManager {
     }
 
 
-
+//TODO Need to build offset limits to prevent off board or into full column.
     public void dropPiece(BlockManager game) {
         int col = 0;
-        while (!isFull(col)) {
+        while (!isFull(col)) { //This while loop initiates dropping piece sequence.
             int tmpRow = 0;
             col = num.nextInt(COL);
             char[] piece = PieceMaker.getPiece();
             int row = 0;
-            while (row < lastEmptyBlock(col) && row + 2 < ROW) {
+            while (row < lastEmptyBlock(col) && row + 2 < ROW) { //This while loop designates one block down movement.
+                if (col + GameBoardGUI.getColOffset() >= 0 ||
+                        col + GameBoardGUI.getColOffset() < ROW ||
+                        board[row][col + GameBoardGUI.getColOffset()] == '-') {
+                    col = col + GameBoardGUI.getColOffset();
+                }
                 for (int i = 2; i >= 0; i--) {
+                    if (GameBoardGUI.getPieceRotate() == 1) {
+                        piece = PieceMaker.rotatePiece(piece);
+                    }
                     board[row + i][col] = piece[i];
+                    if (GameBoardGUI.getDropDown() == 1) {
+                        board[game.lastEmptyBlock(col)][col] = piece[i];
+                    }
                 }
                 System.out.println(game.toString());
                 GameBoardGUI.grid.fillCell(game.getBoardList());
@@ -171,6 +183,26 @@ public class BlockManager {
                 piece[i] = block[n];
             }
             return piece;
+        }
+
+        /**
+         * Method to rotate blocks in piece.
+         * @param piece
+         * @return
+         */
+        public static char[] rotatePiece(char[] piece) {
+           int a = 0;
+           ArrayList<Character> tmpList = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                tmpList.add(piece[i]);
+            }
+            Collections.rotate(tmpList, 1);
+            for (char b :
+                    tmpList) {
+                piece[a] = b;
+                a++;
+            }
+           return piece;
         }
         /**
          *Static method that prints the piece object to the console.
