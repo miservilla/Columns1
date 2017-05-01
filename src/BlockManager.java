@@ -12,7 +12,6 @@ public class BlockManager {
     private static final int ROW = 16;
     private static final int COL = 10;
     private ArrayList<String> boardList;
-    public GameBoardGUI.Grid grid = new GameBoardGUI.Grid();
 
 
     /**
@@ -53,6 +52,8 @@ public class BlockManager {
         return COL;
     }
 
+
+
     public void dropPiece(BlockManager game) {
         int col = 0;
         while (!isFull(col)) {
@@ -65,7 +66,7 @@ public class BlockManager {
                     board[row + i][col] = piece[i];
                 }
                 System.out.println(game.toString());
-                grid.fillCell(game.getBoardList());
+                GameBoardGUI.grid.fillCell(game.getBoardList());
                 GameBoardGUI.setScoreLabel("Current score: " + Search.getScore());
                 board[row][col] = '-';
                 tmpRow = row;
@@ -75,7 +76,7 @@ public class BlockManager {
             Search.search(board);
             System.out.println("\nAfter blocks fall...");
             System.out.println(game.toString());
-//            GameBoardGUI.Grid.fillCell(game.getBoardList());
+//            grid.fillCell(game.getBoardList());
             System.out.println("Number of blocks removed " +
                     Search.getBlocksRemoved() + ".");
             Search.setBlocksRemoved();

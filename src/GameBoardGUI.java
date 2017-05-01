@@ -3,13 +3,15 @@ import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.*;
 
 /**
  * @author Michael Servilla
  * @version date 2017-04-30
  */
-public class GameBoardGUI extends JFrame {
+public class GameBoardGUI extends JFrame implements ActionListener, KeyListener {
     private static JFrame mainFrame = new JFrame("COLUMNS");
     private JPanel mainPanel = new JPanel(new BorderLayout());
     private JPanel topPanel = new JPanel();
@@ -18,13 +20,16 @@ public class GameBoardGUI extends JFrame {
     private static JLabel scoreLabel = new JLabel("Score: ");
     private static JButton startButton = new JButton("Start");
     private static JButton pauseButton = new JButton("Pause");
-    private Grid grid = new Grid();
+    public static Grid grid = new Grid();
     private BlockManager game = new BlockManager();
     private static Timer timer;
 
 
 
     public GameBoardGUI() {
+        addKeyListener(this);
+        setFocusable(true);
+
         startButton.setBackground(Color.GREEN);
 
         mainPanel.setBackground(Color.black);
@@ -53,19 +58,13 @@ public class GameBoardGUI extends JFrame {
 
         grid.fillCell(game.getBoardList());
 
-//        game.dropPiece(game);
-
         startButton.addActionListener(e -> GameBoardGUI.startTimer());
 
         pauseButton.addActionListener(e -> GameBoardGUI.stopTimer());
 
-        timer = new Timer(1000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                game.dropPiece(game);
-            }
-        });
+        timer = new Timer(1000, e -> game.dropPiece(game));
     }
+
 
     public static void setScoreLabel(String scoreLabelText) {
         scoreLabel.setText(scoreLabelText);
@@ -86,6 +85,26 @@ public class GameBoardGUI extends JFrame {
         timer.stop();
         startButton.setBackground(Color.GREEN);
         pauseButton.setBackground(Color.LIGHT_GRAY);
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
     }
 
     public static class Grid extends JPanel {
