@@ -113,44 +113,6 @@ public class BlockManager {
         }
     }
 
-//    public void blockAdvanceByOne() {
-//        if (row < lastEmptyBlock(col) && row + 2 < ROW) { //This while loop designates one block down movement.
-//            if (col + gameGUI.getColOffset() >= 0 ||
-//                    col + gameGUI.getColOffset() < ROW ||
-//                    board[row][col + gameGUI.getColOffset()] == '-') {
-//                col = col + gameGUI.getColOffset();
-//            }
-//            for (int i = 2; i >= 0; i--) {
-//                if (gameGUI.getPieceRotate() == 1) {
-//                    piece = PieceMaker.rotatePiece(piece);
-//                }
-//                board[row + i][col] = piece[i];
-//                if (gameGUI.getDropDown() == 1) {
-//                    board[lastEmptyBlock(col)][col] = piece[i];
-//                }
-//            }
-//            System.out.println(toString());
-//            newGrid.fillCell(getBoardList());
-//            gameGUI.setScoreLabel("Current score: " + Search.getScore());
-//            board[row][col] = '-';
-//            tmpRow = row;
-//            row++;
-//        }
-//        goSearch();
-//        advanceFlag = false;
-//    }
-
-//    public void goSearch() {
-//        board[tmpRow][col] = piece[0];
-//        Search.search(board);
-//        System.out.println("\nAfter blocks fall...");
-//        System.out.println(toString());
-//        System.out.println("Number of blocks removed " +
-//                Search.getBlocksRemoved() + ".");
-//        Search.setBlocksRemoved();
-//        System.out.println("Current score " + Search.getScore() + ".");
-//    }
-
     /**
      * Overridden method of toString to output board to console.
      * @return Returns string value of each line of the board.

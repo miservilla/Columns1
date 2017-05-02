@@ -1,6 +1,7 @@
 import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
+import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.*;
@@ -16,8 +17,9 @@ public class GameBoardGUI extends JFrame {
     private JPanel bottomPanel = new JPanel();
     private JPanel gameBoard = new JPanel(new BorderLayout());
     private static JLabel scoreLabel = new JLabel("Score: ");
-    private JButton startButton = new JButton("Start");
-    private JButton pauseButton = new JButton("Pause");
+//    private JButton startButton = new JButton("START");
+//    private JButton pauseButton = new JButton("Pause");
+    private JToggleButton toggleStart = new JToggleButton("START", true);
     public static Grid grid = new Grid();
     private BlockManager game = new BlockManager();
     private Timer timer;
@@ -29,7 +31,9 @@ public class GameBoardGUI extends JFrame {
 
     public GameBoardGUI() {
 
-        startButton.setBackground(Color.GREEN);
+//        startButton.setBackground(Color.GREEN);
+        toggleStart.setBackground(Color.GREEN);
+        toggleStart.addItemListener(e -> handleToggle(e));
 
         mainPanel.setBackground(Color.black);
         mainPanel.add(topPanel, BorderLayout.PAGE_START);
@@ -42,12 +46,13 @@ public class GameBoardGUI extends JFrame {
         gameBoard.add(grid);
 
 
-        bottomPanel.add(startButton);
-        bottomPanel.add(pauseButton);
+//        bottomPanel.add(startButton);
+        bottomPanel.add(toggleStart);
+//        bottomPanel.add(pauseButton);
         topPanel.add(scoreLabel);
 
         grid.setBackground(Color.LIGHT_GRAY);
-        grid.addKeyListener(new KeyListener() {
+        mainFrame.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
 
@@ -58,15 +63,19 @@ public class GameBoardGUI extends JFrame {
                 int code = e.getKeyCode();
                 if (code == KeyEvent.VK_RIGHT) {
                     colOffset = 1;
+                    System.out.println("Right arrow key pressed");
                 }
                 if (code == KeyEvent.VK_LEFT) {
                     colOffset = -1;
+                    System.out.println("Left arrow key pressed");
                 }
                 if (code == KeyEvent.VK_UP) {
                     pieceRotate = 1;
+                    System.out.println("Up arrow key pressed");
                 }
                 if (code == KeyEvent.VK_DOWN) {
                     dropDown = 1;
+                    System.out.println("Down arrow key pressed");
                 }
             }
 
@@ -75,7 +84,7 @@ public class GameBoardGUI extends JFrame {
 
             }
         });
-        grid.requestFocus();
+        mainFrame.requestFocus();
 
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setSize(525, 907);
@@ -86,11 +95,23 @@ public class GameBoardGUI extends JFrame {
 
         grid.fillCell(game.getBoardList());
 
-        startButton.addActionListener(e -> startTimer());
+//        startButton.addActionListener(e -> startTimer());
 
-        pauseButton.addActionListener(e -> stopTimer());
+//        pauseButton.addActionListener(e -> stopTimer());
 
         timer = new Timer(500, e -> game.runGame());
+    }
+
+    public void handleToggle(ItemEvent e) {
+        if (e.getStateChange() == ItemEvent.SELECTED) {
+            stopTimer();
+            toggleStart.setBackground(Color.GREEN);
+            toggleStart.setText("START");
+        } else {
+            startTimer();
+            toggleStart.setBackground(Color.RED);
+            toggleStart.setText("PAUSE");
+        }
     }
 
 
@@ -104,15 +125,16 @@ public class GameBoardGUI extends JFrame {
     }
 
     public void startTimer() {
+
         timer.start();
-        startButton.setBackground(Color.LIGHT_GRAY);
-        pauseButton.setBackground(Color.RED);
+//        startButton.setBackground(Color.RED);
+//        pauseButton.setBackground(Color.RED);
     }
 
     public void stopTimer() {
         timer.stop();
-        startButton.setBackground(Color.GREEN);
-        pauseButton.setBackground(Color.LIGHT_GRAY);
+//        startButton.setBackground(Color.GREEN);
+//        pauseButton.setBackground(Color.LIGHT_GRAY);
     }
 
     public int getColOffset() {
