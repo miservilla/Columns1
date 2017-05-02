@@ -32,8 +32,8 @@ public class GameBoardGUI extends JFrame {
     public GameBoardGUI() {
 
 //        startButton.setBackground(Color.GREEN);
-        toggleStart.setBackground(Color.GREEN);
         toggleStart.addItemListener(e -> handleToggle(e));
+        toggleStart.setForeground(Color.GREEN.darker().darker());
 
         mainPanel.setBackground(Color.black);
         mainPanel.add(topPanel, BorderLayout.PAGE_START);
@@ -105,11 +105,11 @@ public class GameBoardGUI extends JFrame {
     public void handleToggle(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {
             stopTimer();
-            toggleStart.setBackground(Color.GREEN);
+            toggleStart.setForeground(Color.GREEN.darker().darker());
             toggleStart.setText("START");
         } else {
             startTimer();
-            toggleStart.setBackground(Color.RED);
+            toggleStart.setForeground(Color.RED);
             toggleStart.setText("PAUSE");
         }
     }
