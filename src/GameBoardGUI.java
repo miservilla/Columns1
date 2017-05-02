@@ -90,7 +90,7 @@ public class GameBoardGUI extends JFrame {
 
         pauseButton.addActionListener(e -> stopTimer());
 
-timer = new Timer(3000, e -> game.runGame());
+timer = new Timer(1000, e -> game.runGame());
     }
 
 

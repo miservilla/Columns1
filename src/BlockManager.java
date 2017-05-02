@@ -88,7 +88,7 @@ public class BlockManager {
                     }
                 }
             }
-            if (col == COL) {
+            if (col == COL && redraw == false) {
                 isSettled = true;
                 advanceFlag = false;
             }
