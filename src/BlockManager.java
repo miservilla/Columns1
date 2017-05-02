@@ -54,6 +54,7 @@ public class BlockManager {
 //TODO Need to build offset limits to prevent off board or into full column.
     public void newPiece() {
         col = num.nextInt(COL);
+        System.out.println("Next column is " + col + ".");
         if (!isFull(col)) {
             piece = PieceMaker.getPiece();
             for (int i = 0; i < 3; i++) {
