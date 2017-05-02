@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -10,9 +11,16 @@ public class BlockManager {
 
     private char[][] board; //2D array for board.
     private static Random num = new Random(); //Number generator for piece making and column drop.
-    private static final int ROW = 6;
-    private static final int COL = 6;
+    private static final int ROW = 16;
+    private static final int COL = 10;
     private ArrayList<String> boardList;
+    private static boolean advanceFlag = false;
+    private Timer timer;
+    private static int row;
+    private static int col;
+    private static char[] piece = new char[3];
+    private static int tmpRow;
+
 
 
     /**
@@ -53,52 +61,68 @@ public class BlockManager {
         return COL;
     }
 
-
-//TODO Need to build offset limits to prevent off board or into full column.
-    public void dropPiece(BlockManager game) {
-        int col = 0;
-        while (!isFull(col)) { //This while loop initiates dropping piece sequence.
-            int tmpRow = 0;
-            col = num.nextInt(COL);
-            char[] piece = PieceMaker.getPiece();
-            int row = 0;
-            while (row < lastEmptyBlock(col) && row + 2 < ROW) { //This while loop designates one block down movement.
-                if (col + GameBoardGUI.getColOffset() >= 0 ||
-                        col + GameBoardGUI.getColOffset() < ROW ||
-                        board[row][col + GameBoardGUI.getColOffset()] == '-') {
-                    col = col + GameBoardGUI.getColOffset();
-                }
-                for (int i = 2; i >= 0; i--) {
-                    if (GameBoardGUI.getPieceRotate() == 1) {
-                        piece = PieceMaker.rotatePiece(piece);
-                    }
-                    board[row + i][col] = piece[i];
-                    if (GameBoardGUI.getDropDown() == 1) {
-                        board[game.lastEmptyBlock(col)][col] = piece[i];
-                    }
-                }
-                System.out.println(game.toString());
-                GameBoardGUI.grid.fillCell(game.getBoardList());
-                GameBoardGUI.setScoreLabel("Current score: " + Search.getScore());
-                board[row][col] = '-';
-                tmpRow = row;
-                row++;
-            }
-            board[tmpRow][col] = piece[0];
-            Search.search(board);
-            System.out.println("\nAfter blocks fall...");
-            System.out.println(game.toString());
-//            grid.fillCell(game.getBoardList());
-            System.out.println("Number of blocks removed " +
-                    Search.getBlocksRemoved() + ".");
-            Search.setBlocksRemoved();
-            System.out.println("Current score " + Search.getScore() + ".");
+    public void nextAction() {
+        if (advanceFlag) {
+            blockAdvanceByOne();
+        } else {
+            newPiece();
         }
-        System.out.println("Column is full!");
-        GameBoardGUI.endOfGameDialog();
-        System.exit(0);
     }
 
+
+//TODO Need to build offset limits to prevent off board or into full column.
+    public void newPiece() {
+        col = num.nextInt(COL);
+        if (!isFull(col)) { //This while loop initiates dropping piece sequence.
+            tmpRow = 0;
+            piece = PieceMaker.getPiece();
+            row = 0;
+            advanceFlag = true;
+        } else {
+            System.out.println("Column is full!");
+            GameBoardGUI.endOfGameDialog();
+            System.exit(0);
+        }
+    }
+
+
+    public void blockAdvanceByOne() {
+        if (row < lastEmptyBlock(col) && row + 2 < ROW) { //This while loop designates one block down movement.
+            if (col + GameBoardGUI.getColOffset() >= 0 ||
+                    col + GameBoardGUI.getColOffset() < ROW ||
+                    board[row][col + GameBoardGUI.getColOffset()] == '-') {
+                col = col + GameBoardGUI.getColOffset();
+            }
+            for (int i = 2; i >= 0; i--) {
+                if (GameBoardGUI.getPieceRotate() == 1) {
+                    piece = PieceMaker.rotatePiece(piece);
+                }
+                board[row + i][col] = piece[i];
+                if (GameBoardGUI.getDropDown() == 1) {
+                    board[lastEmptyBlock(col)][col] = piece[i];
+                }
+            }
+            System.out.println(toString());
+            GameBoardGUI.grid.fillCell(getBoardList());
+            GameBoardGUI.setScoreLabel("Current score: " + Search.getScore());
+            board[row][col] = '-';
+            tmpRow = row;
+            row++;
+        }
+        goSearch();
+        advanceFlag = false;
+    }
+
+    public void goSearch() {
+        board[tmpRow][col] = piece[0];
+        Search.search(board);
+        System.out.println("\nAfter blocks fall...");
+        System.out.println(toString());
+        System.out.println("Number of blocks removed " +
+                Search.getBlocksRemoved() + ".");
+        Search.setBlocksRemoved();
+        System.out.println("Current score " + Search.getScore() + ".");
+    }
 
     /**
      * Overridden method of toString to output board to console.
@@ -164,6 +188,8 @@ public class BlockManager {
         }
         return a;
     }
+
+
 
     /**
      * Inner class to create new piece (3 blocks of randomly chosen colors from

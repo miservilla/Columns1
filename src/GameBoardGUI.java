@@ -44,6 +44,7 @@ public class GameBoardGUI extends JFrame implements ActionListener, KeyListener 
         gameBoard.setLocation(0, 0);
         gameBoard.setSize(600, 800);
         gameBoard.add(grid);
+        gameBoard.add();
 
 
         bottomPanel.add(startButton);
@@ -51,6 +52,35 @@ public class GameBoardGUI extends JFrame implements ActionListener, KeyListener 
         topPanel.add(scoreLabel);
 
         grid.setBackground(Color.LIGHT_GRAY);
+        grid.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                int code = e.getKeyCode();
+                if (code == KeyEvent.VK_RIGHT) {
+                    colOffset = 1;
+                }
+                if (code == KeyEvent.VK_LEFT) {
+                    colOffset = -1;
+                }
+                if (code == KeyEvent.VK_UP) {
+                    pieceRotate = 1;
+                }
+                if (code == KeyEvent.VK_DOWN) {
+                    dropDown = 1;
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+        grid.requestFocus();
 
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setSize(525, 907);
@@ -65,7 +95,7 @@ public class GameBoardGUI extends JFrame implements ActionListener, KeyListener 
 
         pauseButton.addActionListener(e -> GameBoardGUI.stopTimer());
 
-        timer = new Timer(1000, e -> game.dropPiece(game));
+        timer = new Timer(1000, e -> game.nextAction());
     }
 
 
@@ -107,20 +137,6 @@ public class GameBoardGUI extends JFrame implements ActionListener, KeyListener 
 
     @Override
     public void keyPressed(KeyEvent e) {
-        setFocusable(true);
-        int code = e.getKeyCode();
-        if (code == KeyEvent.VK_RIGHT) {
-            colOffset = 1;
-        }
-        if (code == KeyEvent.VK_LEFT) {
-            colOffset = -1;
-        }
-        if (code == KeyEvent.VK_UP) {
-            pieceRotate = 1;
-        }
-        if (code == KeyEvent.VK_DOWN) {
-            dropDown = 1;
-        }
 
     }
 
