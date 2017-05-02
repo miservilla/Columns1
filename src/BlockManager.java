@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
+ * BlockManager class that runs the logic of creating 2D array for the board,
+ * the logic of piece position manipulation, and piece creation.
  * @author Michael Servilla
  * @version date 2017-04-30
  */
@@ -36,7 +38,10 @@ public class BlockManager {
             }
         }
     }
-
+    /**
+     * Method to that takes timer tick, and determines if new piece is needed to
+     * be created, or current piece needs to advance down the board.
+     */
     public void runGame() {
         if (advanceFlag) {
             redraw = false;
@@ -45,8 +50,10 @@ public class BlockManager {
             newPiece();
         }
     }
-
-
+    /**
+     * Method that requests piece to be made, and then determines what column
+     * to drop it in. Also checks to see if column is full, and ends game if so.
+     */
     public void newPiece() {
         col = num.nextInt(COL);
         System.out.println("Next column is " + col + ".");
@@ -65,10 +72,12 @@ public class BlockManager {
         } else {
             System.out.println("Column is full!");
             GameBoardGUI.endOfGameDialog();
-            System.exit(0);
         }
     }
-
+    /**
+     * Method to to test board for empty spaces below pieces, advance the piece,
+     * and respond to arrow keys.
+     */
     public void advanceOne() {
         int i; // "i" is for piece advance loop.
         int j; //"j" is for column loop.
@@ -80,8 +89,8 @@ public class BlockManager {
                 }
                 for (k = 0; k <= ROW - 2; k++) {
                     if (board[k][j] != '-' && board[k + 1][j] == '-') { //Checks to see if OK to advance.
-                        if (board[k][j + columnOffset] == '-' && !Search.repeat && j + columnOffset > 0 &&
-                                j + columnOffset < COL-1 && pieceDropFlag) {
+                        if (board[k][j + columnOffset] == '-' && !Search.repeat && j + columnOffset >= 0 &&
+                                j + columnOffset < COL && pieceDropFlag) {
                             moveHorizontal(k, j);
                         }
                         if (rotatePieceFlag == 1 && pieceDropFlag) {
@@ -109,7 +118,7 @@ public class BlockManager {
                     }
                 }
             }
-            if (j == COL && redraw == false) {
+            if (j == COL && !redraw) {
                 isSettled = true;
                 advanceFlag = false;
                 Search.search(board);
@@ -127,11 +136,10 @@ public class BlockManager {
                     advanceFlag = true;
                     Search.bigCoordinates.clear();
                     Search.search(board);
-        }
+                }
             }
         }
     }
-
     /**
      * Overridden method of toString to output board to console.
      * @return Returns string value of each line of the board.
@@ -147,7 +155,6 @@ public class BlockManager {
         }
         return boardLine.toString();
     }
-
     /**
      * Method to create ArrayList of Strings recreating String representation of board.
      * @return Returns ArrayList of Strings.
@@ -162,7 +169,6 @@ public class BlockManager {
         }
         return boardList;
     }
-
     /**
      * Method to test whether chosen column can accept any further pieces (3
      * empty blocks starting from the top are required).
@@ -178,7 +184,11 @@ public class BlockManager {
         }
         return (a < 3);
     }
-
+    /**
+     * Method to determine bottom of column.
+     * @param col Column to be checked.
+     * @return Returns int of bottom row number.
+     */
     public int getLastEmptyBlock(int col){
         int a = 0;
         for (int i = 0; i < ROW; i++) {
@@ -187,7 +197,11 @@ public class BlockManager {
         }
         return a;
     }
-
+    /**
+     * Method to move piece horizontally either left or right.
+     * @param row Row number of lowest block.
+     * @param col Column of current piece.
+     */
     public void moveHorizontal(int row, int col) {
         for (int i = 0; i > -3; i--) {
             board[row + i][col + columnOffset] = board[row + i][col];
@@ -195,7 +209,11 @@ public class BlockManager {
         }
         columnOffset = 0;
     }
-
+    /**
+     * Method to rotate piece.
+     * @param row Row number of the lowest block.
+     * @param col Column of the current piece.
+     */
     public void rotatePiece(int row, int col) {
         char tmpBlock = board[row][col];
         board[row][col] = board[row - 1][col];
@@ -203,7 +221,11 @@ public class BlockManager {
         board[row - 2][col] = tmpBlock;
         rotatePieceFlag = 0;
     }
-
+    /**
+     * Method to drop piece to bottom of the column.
+     * @param row Row number of the lowest block.
+     * @param col Column of the current piece.
+     */
     public void dropDown(int row, int col) {
         int lastEmptyBlock = getLastEmptyBlock(col);
         for (int i = 0; i > -3 ; i--) {
@@ -211,8 +233,6 @@ public class BlockManager {
             board[row + i][col] = '-';
         }
     }
-
-
     /**
      * Inner class to create new piece (3 blocks of randomly chosen colors from
      * 4 available colors (Red 'R", Yellow 'Y', Blue 'B', and Black 'K').
@@ -233,15 +253,5 @@ public class BlockManager {
             return piece;
         }
 
-
-        /**
-         *Static method that prints the piece object to the console.
-         */
-       public static void printPiece() {
-            for (char a :
-                    piece) {
-                System.out.println(a);
-            }
-        }
     }
 }

@@ -7,6 +7,7 @@ import java.awt.event.KeyListener;
 import java.util.*;
 
 /**
+ * Class to create GUI.
  * @author Michael Servilla
  * @version date 2017-04-30
  */
@@ -23,9 +24,11 @@ public class GameBoardGUI extends JFrame {
     private Timer timer;
 
 
-
+    /**
+     * Constructor for GUI class using 1 JFrame, 4 JPanels, 1 JLabel,
+     * 1 JToggleButton, and 1 timer.
+     */
     public GameBoardGUI() {
-
         mainFrame.setFocusable(false);
         mainPanel.setFocusable(false);
         topPanel.setFocusable(false);
@@ -34,10 +37,8 @@ public class GameBoardGUI extends JFrame {
         scoreLabel.setFocusable(false);
         grid.setFocusable(false);
 
-
         toggleStart.addItemListener(e -> handleToggle(e));
         toggleStart.setForeground(Color.GREEN.darker().darker());
-
 
         mainPanel.setBackground(Color.black);
         mainPanel.add(topPanel, BorderLayout.PAGE_START);
@@ -68,7 +69,10 @@ public class GameBoardGUI extends JFrame {
 
         timer = new Timer(500, e -> game.runGame());
     }
-
+    /**
+     * Method to handle JToggleButton for start and pause.
+     * @param e Event parameter.
+     */
     public void handleToggle(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {
             timer.stop();
@@ -84,11 +88,17 @@ public class GameBoardGUI extends JFrame {
             toggleStart.requestFocus();
             toggleStart.hasFocus();
             toggleStart.addKeyListener(new KeyListener() {
+                /**
+                 * Overidden method from KeyListener class, not used.
+                 * @param e
+                 */
                 @Override
                 public void keyTyped(KeyEvent e) {
-
                 }
-
+                /**
+                 * KeyPressed method to listen for arrow keys.
+                 * @param e Event parameter.
+                 */
                 @Override
                 public void keyPressed(KeyEvent e) {
                     int code = e.getKeyCode();
@@ -109,29 +119,39 @@ public class GameBoardGUI extends JFrame {
                         System.out.println("Down arrow key pressed");
                     }
                 }
-
+                /**
+                 * Overidden method from KeyListener class, not used.
+                 * @param e
+                 */
                 @Override
                 public void keyReleased(KeyEvent e) {
-
                 }
             });
-
         }
     }
-
-
+    /**
+     * Method to set scoreLabel to current score.
+     * @param scoreLabelText Text value of game score.
+     */
     public static void setScoreLabel(String scoreLabelText) {
         scoreLabel.setText(scoreLabelText);
     }
-
+    /**
+     * End of game dialog box.
+     */
     public static void endOfGameDialog() {
         JOptionPane.showMessageDialog(mainFrame, "GAME OVER!  Final " +
                 "Score: " + Search.getScore());
     }
-
+    /**
+     * Inner class that is responsible for painting grid and blocks.
+     */
     public static class Grid extends JPanel {
         private static ArrayList<String> fillCells;
 
+        /**
+         * Grid construct that uses paintComponent method.
+         */
         public Grid() {
         }
         @Override
@@ -161,11 +181,21 @@ public class GameBoardGUI extends JFrame {
                 g.drawLine(10, i, 510, i);
             }
         }
+
+        /**
+         * Method to take ArrayList of current board status and calls repaint.
+         * @param gridList
+         */
         public void fillCell(ArrayList gridList) {
             fillCells = new ArrayList(gridList);
             repaint();
         }
 
+        /**
+         * Method that uses switch statement to determine block color.
+         * @param colorCode Letters that correspond to colors.
+         * @return
+         */
         Color getColor( String colorCode) {
             Color cellColor = Color.LIGHT_GRAY;
             switch (colorCode) {
@@ -184,4 +214,3 @@ public class GameBoardGUI extends JFrame {
 
     }
 }
-

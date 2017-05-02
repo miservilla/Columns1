@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.HashSet;
 /**
+ * Search class algorithm that looks for 3 or more matches of blocks in all 8
+ * directions.
  * @author Michael Servilla
  * @version date 2017-04-30
  */
@@ -62,7 +64,6 @@ class Search {
             destroy(board);
         }
     }
-
     /**
      * Method to destroy (replace) alike pieces by replacing them with an empty
      * place holder, '-'.
@@ -83,7 +84,6 @@ class Search {
         blocksRemoved = blocksRemoved + bigCoordinates.size();
 //        gravity(board);
     }
-
     /**
      * Method to allow gravity to drop pieces hovering above empty spaces after
      * destroying to fall into place. Moves column by column, rebuilding them
@@ -115,20 +115,8 @@ class Search {
                 board[b++][col] = tmpColOccupied.get(a++);
             }
         }
-//        if (repeat) {
-//            bigCoordinates.clear();
-//            search(board);
-//        }
     }
 
-    /**
-     * Method to repeat search if appropriate flag indicates need.
-     * @param board Accept board object to pass on to search method.
-     */
-    static void startRepeat(char[][] board) {
-        bigCoordinates.clear();
-        search(board);
-    }
 
     /**
      * Getter method to return current game score.
@@ -146,23 +134,11 @@ class Search {
         return blocksRemoved;
     }
 
-    /**
-     * Method to check if need to repeat search after immediate prior removal of
-     * block.
-     * @return Returns boolean value of true if need to repeat search, false if
-     * not needed to repeat search.
-     */
-   static boolean isRepeat() {
-        return repeat;
-    }
 
     /**
      * Setter method to set score back to 0 for second instance of game being
      * played.
      */
-    static void setScore () {
-        score = 0;
-    }
 
     static void setBlocksRemoved() {
         blocksRemoved = 0;
