@@ -17,8 +17,6 @@ public class GameBoardGUI extends JFrame {
     private JPanel bottomPanel = new JPanel();
     private JPanel gameBoard = new JPanel(new BorderLayout());
     private static JLabel scoreLabel = new JLabel("Score: ");
-//    private JButton startButton = new JButton("START");
-//    private JButton pauseButton = new JButton("Pause");
     private JToggleButton toggleStart = new JToggleButton("START", true);
     public static Grid grid = new Grid();
     private BlockManager game = new BlockManager();
@@ -31,7 +29,6 @@ public class GameBoardGUI extends JFrame {
 
     public GameBoardGUI() {
 
-//        startButton.setBackground(Color.GREEN);
         toggleStart.addItemListener(e -> handleToggle(e));
         toggleStart.setForeground(Color.GREEN.darker().darker());
 
@@ -46,9 +43,7 @@ public class GameBoardGUI extends JFrame {
         gameBoard.add(grid);
 
 
-//        bottomPanel.add(startButton);
         bottomPanel.add(toggleStart);
-//        bottomPanel.add(pauseButton);
         topPanel.add(scoreLabel);
 
         grid.setBackground(Color.LIGHT_GRAY);
@@ -84,6 +79,7 @@ public class GameBoardGUI extends JFrame {
 
             }
         });
+        mainFrame.isFocusable();
         mainFrame.requestFocus();
 
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -95,20 +91,16 @@ public class GameBoardGUI extends JFrame {
 
         grid.fillCell(game.getBoardList());
 
-//        startButton.addActionListener(e -> startTimer());
-
-//        pauseButton.addActionListener(e -> stopTimer());
-
         timer = new Timer(500, e -> game.runGame());
     }
 
     public void handleToggle(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {
-            stopTimer();
+            timer.stop();
             toggleStart.setForeground(Color.GREEN.darker().darker());
             toggleStart.setText("START");
         } else {
-            startTimer();
+            timer.start();
             toggleStart.setForeground(Color.RED);
             toggleStart.setText("PAUSE");
         }
@@ -122,19 +114,6 @@ public class GameBoardGUI extends JFrame {
     public void endOfGameDialog() {
         JOptionPane.showMessageDialog(mainFrame, "GAME OVER!  Final " +
                 "Score: " + Search.getScore());
-    }
-
-    public void startTimer() {
-
-        timer.start();
-//        startButton.setBackground(Color.RED);
-//        pauseButton.setBackground(Color.RED);
-    }
-
-    public void stopTimer() {
-        timer.stop();
-//        startButton.setBackground(Color.GREEN);
-//        pauseButton.setBackground(Color.LIGHT_GRAY);
     }
 
     public int getColOffset() {
