@@ -17,8 +17,8 @@ class Search {
     // one of a kind coordinates for removal.
     private static HashSet<String> coordinates = new HashSet<>(); //Temporary HashSet
     // to hold coordinates during single directional search.
-    static int R = BlockManager.getRow();
-    static int C = BlockManager.getCol();
+    static int R = BlockManager.ROW;
+    static int C = BlockManager.COL;
 
     /**
      * Search method that finds all 3 or more in a row matches.

@@ -11,8 +11,8 @@ public class BlockManager {
 
     private char[][] board; //2D array for board.
     private static Random num = new Random(); //Number generator for piece making and column drop.
-    private static final int ROW = 16;
-    private static final int COL = 10;
+    static final int ROW = 6;
+    static final int COL = 4;
     private ArrayList<String> boardList;
     private static boolean advanceFlag = false;
     private Timer timer;
@@ -20,6 +20,10 @@ public class BlockManager {
     private static int col;
     private static char[] piece = new char[3];
     private static int tmpRow;
+    boolean isSettled = false;
+    boolean redraw = false;
+//    GameBoardGUI gameGUI = new GameBoardGUI();
+    GameBoardGUI.Grid newGrid = new GameBoardGUI.Grid();
 
 
 
@@ -37,33 +41,10 @@ public class BlockManager {
         }
     }
 
-    /**
-     * Method to get get representation of game board.
-     * @return Char 2D array of board.
-     */
-    public char[][] getBoard() {
-        return board;
-    }
-
-    /**
-     * Method to get number of rows.
-     * @return Int number of rows.
-     */
-    public static int getRow() {
-        return ROW;
-    }
-
-    /**
-     * Method to get number of columns.
-     * @return Int number of columns.
-     */
-    public static int getCol() {
-        return COL;
-    }
-
-    public void nextAction() {
+    public void runGame() {
         if (advanceFlag) {
-            blockAdvanceByOne();
+            redraw = false;
+            advanceOne();
         } else {
             newPiece();
         }
@@ -73,45 +54,73 @@ public class BlockManager {
 //TODO Need to build offset limits to prevent off board or into full column.
     public void newPiece() {
         col = num.nextInt(COL);
-        if (!isFull(col)) { //This while loop initiates dropping piece sequence.
-            tmpRow = 0;
+        if (!isFull(col)) {
             piece = PieceMaker.getPiece();
-            row = 0;
+            for (int i = 0; i < 3; i++) {
+                board[i][col] = piece[i];
+            }
+            System.out.println(toString());
             advanceFlag = true;
+            isSettled = false;
         } else {
             System.out.println("Column is full!");
-            GameBoardGUI.endOfGameDialog();
+//            gameGUI.endOfGameDialog();
             System.exit(0);
         }
     }
 
-
-    public void blockAdvanceByOne() {
-        if (row < lastEmptyBlock(col) && row + 2 < ROW) { //This while loop designates one block down movement.
-            if (col + GameBoardGUI.getColOffset() >= 0 ||
-                    col + GameBoardGUI.getColOffset() < ROW ||
-                    board[row][col + GameBoardGUI.getColOffset()] == '-') {
-                col = col + GameBoardGUI.getColOffset();
-            }
-            for (int i = 2; i >= 0; i--) {
-                if (GameBoardGUI.getPieceRotate() == 1) {
-                    piece = PieceMaker.rotatePiece(piece);
+    public void advanceOne() {
+        if (!isSettled) {
+            for (col = 0; col < COL; col++) {
+                if (redraw) {
+                    break;
                 }
-                board[row + i][col] = piece[i];
-                if (GameBoardGUI.getDropDown() == 1) {
-                    board[lastEmptyBlock(col)][col] = piece[i];
+                for (row = 0; row <= ROW - 2; row++) {
+                    if (board[row][col] != '-' && board[row + 1][col] == '-') {
+                        for (int i = row; i > row - 3 ; i--) {
+                            board[i + 1][col] = board[i][col];
+                        }
+                        board[row - 2][col] = '-';
+                        System.out.println(toString());
+                        isSettled = false;
+                        redraw = true;
+                        break;
+                    }
                 }
             }
-            System.out.println(toString());
-            GameBoardGUI.grid.fillCell(getBoardList());
-            GameBoardGUI.setScoreLabel("Current score: " + Search.getScore());
-            board[row][col] = '-';
-            tmpRow = row;
-            row++;
+            if (col == COL) {
+                isSettled = true;
+                advanceFlag = false;
+            }
         }
-        goSearch();
-        advanceFlag = false;
     }
+
+//    public void blockAdvanceByOne() {
+//        if (row < lastEmptyBlock(col) && row + 2 < ROW) { //This while loop designates one block down movement.
+//            if (col + gameGUI.getColOffset() >= 0 ||
+//                    col + gameGUI.getColOffset() < ROW ||
+//                    board[row][col + gameGUI.getColOffset()] == '-') {
+//                col = col + gameGUI.getColOffset();
+//            }
+//            for (int i = 2; i >= 0; i--) {
+//                if (gameGUI.getPieceRotate() == 1) {
+//                    piece = PieceMaker.rotatePiece(piece);
+//                }
+//                board[row + i][col] = piece[i];
+//                if (gameGUI.getDropDown() == 1) {
+//                    board[lastEmptyBlock(col)][col] = piece[i];
+//                }
+//            }
+//            System.out.println(toString());
+//            newGrid.fillCell(getBoardList());
+//            gameGUI.setScoreLabel("Current score: " + Search.getScore());
+//            board[row][col] = '-';
+//            tmpRow = row;
+//            row++;
+//        }
+//        goSearch();
+//        advanceFlag = false;
+//    }
 
     public void goSearch() {
         board[tmpRow][col] = piece[0];
@@ -159,7 +168,7 @@ public class BlockManager {
      * Method to return random column number for next piece drop.
      * @return Returns int of next column for drop.
      */
-    public static int getCOL() {
+    public int getCOL() {
         int nextCOL = num.nextInt(COL);
         return nextCOL;
     }

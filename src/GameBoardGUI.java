@@ -1,8 +1,6 @@
 import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.*;
@@ -11,27 +9,25 @@ import java.util.*;
  * @author Michael Servilla
  * @version date 2017-04-30
  */
-public class GameBoardGUI extends JFrame implements ActionListener, KeyListener {
-    private static JFrame mainFrame = new JFrame("COLUMNS");
+public class GameBoardGUI extends JFrame {
+    private JFrame mainFrame = new JFrame("COLUMNS");
     private JPanel mainPanel = new JPanel(new BorderLayout());
     private JPanel topPanel = new JPanel();
     private JPanel bottomPanel = new JPanel();
     private JPanel gameBoard = new JPanel(new BorderLayout());
-    private static JLabel scoreLabel = new JLabel("Score: ");
-    private static JButton startButton = new JButton("Start");
-    private static JButton pauseButton = new JButton("Pause");
-    public static Grid grid = new Grid();
+    private JLabel scoreLabel = new JLabel("Score: ");
+    private JButton startButton = new JButton("Start");
+    private JButton pauseButton = new JButton("Pause");
+    public Grid grid = new Grid();
     private BlockManager game = new BlockManager();
-    private static Timer timer;
-    private static int colOffset;
-    private static int dropDown;
-    private static int pieceRotate;
+    private Timer timer;
+    private int colOffset;
+    private int dropDown;
+    private int pieceRotate;
 
 
 
     public GameBoardGUI() {
-        addKeyListener(this);
-        setFocusable(true);
 
         startButton.setBackground(Color.GREEN);
 
@@ -44,7 +40,6 @@ public class GameBoardGUI extends JFrame implements ActionListener, KeyListener 
         gameBoard.setLocation(0, 0);
         gameBoard.setSize(600, 800);
         gameBoard.add(grid);
-        gameBoard.add();
 
 
         bottomPanel.add(startButton);
@@ -91,68 +86,49 @@ public class GameBoardGUI extends JFrame implements ActionListener, KeyListener 
 
         grid.fillCell(game.getBoardList());
 
-        startButton.addActionListener(e -> GameBoardGUI.startTimer());
+        startButton.addActionListener(e -> startTimer());
 
-        pauseButton.addActionListener(e -> GameBoardGUI.stopTimer());
+        pauseButton.addActionListener(e -> stopTimer());
 
-        timer = new Timer(1000, e -> game.nextAction());
+timer = new Timer(3000, e -> game.runGame());
     }
 
 
-    public static void setScoreLabel(String scoreLabelText) {
+    public void setScoreLabel(String scoreLabelText) {
         scoreLabel.setText(scoreLabelText);
     }
 
-    public static void endOfGameDialog() {
+    public void endOfGameDialog() {
         JOptionPane.showMessageDialog(mainFrame, "GAME OVER!  Final " +
                 "Score: " + Search.getScore());
     }
 
-    public static void startTimer() {
+    public void startTimer() {
         timer.start();
         startButton.setBackground(Color.LIGHT_GRAY);
         pauseButton.setBackground(Color.RED);
     }
 
-    public static void stopTimer() {
+    public void stopTimer() {
         timer.stop();
         startButton.setBackground(Color.GREEN);
         pauseButton.setBackground(Color.LIGHT_GRAY);
     }
 
-    public static int getColOffset() {
+    public int getColOffset() {
         return colOffset;
     }
-    public static int getDropDown() {
+    public int getDropDown() {
         return dropDown;
     }
-    public static int getPieceRotate() {
+    public int getPieceRotate() {
         return pieceRotate;
     }
 
-    @Override
-    public void keyTyped(KeyEvent e) {
 
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-    }
 
     public static class Grid extends JPanel {
         private static ArrayList<String> fillCells;
-
 
         public Grid() {
         }
