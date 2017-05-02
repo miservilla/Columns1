@@ -5,7 +5,7 @@ import java.util.HashSet;
  * @version date 2017-04-30
  */
 class Search {
-    private static boolean repeat;
+    static boolean repeat;
     private static int score;
     private static int blocksRemoved;
     //Offsets to allow 8 directional searches.
@@ -13,7 +13,7 @@ class Search {
     private static int[] y = {0, 1, 1, 1, 0, -1, -1, -1};
     private static ArrayList <Character> tmpColOccupied = new ArrayList<>();
     private static ArrayList <Character> tmpColVacant = new ArrayList<>();
-    private static HashSet<String> bigCoordinates = new HashSet<>(); //HashSet to hold
+    static HashSet<String> bigCoordinates = new HashSet<>(); //HashSet to hold
     // one of a kind coordinates for removal.
     private static HashSet<String> coordinates = new HashSet<>(); //Temporary HashSet
     // to hold coordinates during single directional search.
@@ -58,8 +58,9 @@ class Search {
                 }
             }
         }
-        if (repeat)
-        destroy(board);
+        if (repeat) {
+            destroy(board);
+        }
     }
 
     /**
@@ -80,7 +81,7 @@ class Search {
         }
         score = score + bigCoordinates.size();
         blocksRemoved = blocksRemoved + bigCoordinates.size();
-        gravity(board);
+//        gravity(board);
     }
 
     /**

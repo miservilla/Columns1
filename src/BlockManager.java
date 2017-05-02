@@ -59,7 +59,7 @@ public class BlockManager {
             System.out.println(toString());
             GameBoardGUI.grid.fillCell(getBoardList());
             System.out.println("Current score " + Search.getScore() + ".");
-            newGUI.setScoreLabel("Current score: " + Search.getScore());
+            GameBoardGUI.setScoreLabel("Current score: " + Search.getScore());
             advanceFlag = true;
             isSettled = false;
         } else {
@@ -82,6 +82,8 @@ public class BlockManager {
                         }
                         board[row - 2][col] = '-';
                         System.out.println(toString());
+                        System.out.println("Current score " + Search.getScore() + ".");
+                        GameBoardGUI.setScoreLabel("Current score: " + Search.getScore());
                         isSettled = false;
                         redraw = true;
                         GameBoardGUI.grid.fillCell(getBoardList());
@@ -93,6 +95,20 @@ public class BlockManager {
                 isSettled = true;
                 advanceFlag = false;
                 Search.search(board);
+                System.out.println("Number of blocks removed " +
+                Search.getBlocksRemoved() + ".");
+                Search.setBlocksRemoved();
+                if (Search.repeat) {
+                    System.out.println(toString());
+                    System.out.println("Current score " + Search.getScore() + ".");
+                    GameBoardGUI.setScoreLabel("Current score: " + Search.getScore());
+                    isSettled = false;
+                    redraw = true;
+                    GameBoardGUI.grid.fillCell(getBoardList());
+                    advanceFlag = true;
+                    Search.bigCoordinates.clear();
+                    Search.search(board);
+        }
             }
         }
     }

@@ -15,7 +15,7 @@ public class GameBoardGUI extends JFrame {
     private JPanel topPanel = new JPanel();
     private JPanel bottomPanel = new JPanel();
     private JPanel gameBoard = new JPanel(new BorderLayout());
-    private JLabel scoreLabel = new JLabel("Score: ");
+    private static JLabel scoreLabel = new JLabel("Score: ");
     private JButton startButton = new JButton("Start");
     private JButton pauseButton = new JButton("Pause");
     public static Grid grid = new Grid();
@@ -90,11 +90,11 @@ public class GameBoardGUI extends JFrame {
 
         pauseButton.addActionListener(e -> stopTimer());
 
-        timer = new Timer(100, e -> game.runGame());
+        timer = new Timer(500, e -> game.runGame());
     }
 
 
-    public void setScoreLabel(String scoreLabelText) {
+    public static void setScoreLabel(String scoreLabelText) {
         scoreLabel.setText(scoreLabelText);
     }
 
