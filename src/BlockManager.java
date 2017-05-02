@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -19,10 +18,10 @@ public class BlockManager {
     private static char[] piece = new char[3];
     boolean isSettled = false;
     boolean redraw = false;
-//    GameBoardGUI newGUI = new GameBoardGUI();
-
-
-
+    static int columnOffset = 0;
+    static int dropDownFlag = 0;
+    static int rotatePieceFlag = 0;
+    static boolean pieceDropFlag = false;
 
     /**
      * Constructor to build board with designated row and column size. Fills in
@@ -62,28 +61,42 @@ public class BlockManager {
             GameBoardGUI.setScoreLabel("Current score: " + Search.getScore());
             advanceFlag = true;
             isSettled = false;
+            pieceDropFlag = true;
         } else {
             System.out.println("Column is full!");
-//            gameGUI.endOfGameDialog();
+            GameBoardGUI.endOfGameDialog();
             System.exit(0);
         }
     }
 
     public void advanceOne() {
+        int i; // "i" is for piece advance loop.
+        int j; //"j" is for column loop.
+        int k; //"k" is for row loop.
         if (!isSettled) {
-            for (col = 0; col < COL; col++) {
+            for (j = 0; j < COL; j++) {
                 if (redraw) {
                     break;
                 }
-                for (row = 0; row <= ROW - 2; row++) {
-                    if (board[row][col] != '-' && board[row + 1][col] == '-') {
-                        for (int i = row; i > row - 3 ; i--) {
-                            board[i + 1][col] = board[i][col];
+                for (k = 0; k <= ROW - 2; k++) {
+                    if (board[k][j] != '-' && board[k + 1][j] == '-') { //Checks to see if OK to advance.
+                        if (board[k][j + columnOffset] == '-' && !Search.repeat && j + columnOffset > 0 &&
+                                j + columnOffset < COL-1 && pieceDropFlag == true) {
+                            moveHorizontal(k, j);
                         }
-                        board[row - 2][col] = '-';
+                        if (rotatePieceFlag == 1 && pieceDropFlag == true) {
+                            rotatePiece(k, j);
+                        }
+                        if (dropDownFlag == 1 && pieceDropFlag == true) {
+                            dropDown(k, j);
+                        }
+                        for (i = k; i > k - 3 ; i--) {
+                            board[i + 1][j] = board[i][j];
+                        }
+                        board[k - 2][j] = '-';
                         System.out.println(toString());
                         System.out.println("Current score " + Search.getScore() + ".");
-                        System.out.println("Current column: " + col);
+                        System.out.println("Current column: " + j);
                         GameBoardGUI.setScoreLabel("Current score: " + Search.getScore());
                         isSettled = false;
                         redraw = true;
@@ -93,13 +106,14 @@ public class BlockManager {
                     }
                 }
             }
-            if (col == COL && redraw == false) {
+            if (j == COL && redraw == false) {
                 isSettled = true;
                 advanceFlag = false;
                 Search.search(board);
                 System.out.println("Number of blocks removed " +
                 Search.getBlocksRemoved() + ".");
                 Search.setBlocksRemoved();
+                pieceDropFlag = false;
                 if (Search.repeat) {
                     System.out.println(toString());
                     System.out.println("Current score " + Search.getScore() + ".");
@@ -147,15 +161,6 @@ public class BlockManager {
     }
 
     /**
-     * Method to return random column number for next piece drop.
-     * @return Returns int of next column for drop.
-     */
-    public int getCOL() {
-        int nextCOL = num.nextInt(COL);
-        return nextCOL;
-    }
-
-    /**
      * Method to test whether chosen column can accept any further pieces (3
      * empty blocks starting from the top are required).
      * @param col Randomly chosen column.
@@ -171,7 +176,7 @@ public class BlockManager {
         return (a < 3);
     }
 
-    public int lastEmptyBlock(int col){
+    public int getLastEmptyBlock(int col){
         int a = 0;
         for (int i = 0; i < ROW; i++) {
             if (board[i][col] == '-')
@@ -180,6 +185,30 @@ public class BlockManager {
         return a;
     }
 
+    public void moveHorizontal(int row, int col) {
+        for (int i = 0; i > -3; i--) {
+            board[row + i][col + columnOffset] = board[row + i][col];
+            board[row + i][col] = '-';
+        }
+        columnOffset = 0;
+    }
+
+    public void rotatePiece(int row, int col) {
+        char tmpBlock = board[row][col];
+        board[row][col] = board[row - 1][col];
+        board[row - 1][col] = board[row - 2][col];
+        board[row - 2][col] = tmpBlock;
+        rotatePieceFlag = 0;
+    }
+
+    public void dropDown(int row, int col) {
+        int lastEmptyBlock = getLastEmptyBlock(col);
+        for (int i = 0; i > -3 ; i--) {
+            board[lastEmptyBlock + i][col] = board[row + i][col];
+            board[row + i][col] = '-';
+        }
+        dropDownFlag = 0;
+    }
 
 
     /**
@@ -202,25 +231,7 @@ public class BlockManager {
             return piece;
         }
 
-        /**
-         * Method to rotate blocks in piece.
-         * @param piece
-         * @return
-         */
-        public static char[] rotatePiece(char[] piece) {
-           int a = 0;
-           ArrayList<Character> tmpList = new ArrayList<>();
-            for (int i = 0; i < 3; i++) {
-                tmpList.add(piece[i]);
-            }
-            Collections.rotate(tmpList, 1);
-            for (char b :
-                    tmpList) {
-                piece[a] = b;
-                a++;
-            }
-           return piece;
-        }
+
         /**
          *Static method that prints the piece object to the console.
          */

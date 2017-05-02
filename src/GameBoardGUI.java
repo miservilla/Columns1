@@ -11,7 +11,7 @@ import java.util.*;
  * @version date 2017-04-30
  */
 public class GameBoardGUI extends JFrame {
-    private JFrame mainFrame = new JFrame("COLUMNS");
+    private static JFrame mainFrame = new JFrame("COLUMNS");
     private JPanel mainPanel = new JPanel(new BorderLayout());
     private JPanel topPanel = new JPanel();
     private JPanel bottomPanel = new JPanel();
@@ -21,9 +21,6 @@ public class GameBoardGUI extends JFrame {
     public static Grid grid = new Grid();
     private BlockManager game = new BlockManager();
     private Timer timer;
-    int colOffset;
-    int dropDown;
-    int pieceRotate;
 
 
 
@@ -69,7 +66,7 @@ public class GameBoardGUI extends JFrame {
 
         grid.fillCell(game.getBoardList());
 
-        timer = new Timer(5000, e -> game.runGame());
+        timer = new Timer(500, e -> game.runGame());
     }
 
     public void handleToggle(ItemEvent e) {
@@ -96,23 +93,19 @@ public class GameBoardGUI extends JFrame {
                 public void keyPressed(KeyEvent e) {
                     int code = e.getKeyCode();
                     if (code == KeyEvent.VK_RIGHT) {
-                        if (BlockManager.col < BlockManager.COL - 1) {
-                            BlockManager.col = BlockManager.col + 1;
-                        }
+                        BlockManager.columnOffset = 1;
                         System.out.println("Right arrow key pressed");
                     }
                     if (code == KeyEvent.VK_LEFT) {
-                        if (BlockManager.col > 0) {
-                            BlockManager.col = BlockManager.col - 1;
-                        }
+                        BlockManager.columnOffset = -1;
                         System.out.println("Left arrow key pressed");
                     }
                     if (code == KeyEvent.VK_UP) {
-                        pieceRotate = 1;
+                        BlockManager.rotatePieceFlag = 1;
                         System.out.println("Up arrow key pressed");
                     }
                     if (code == KeyEvent.VK_DOWN) {
-                        BlockManager.row = game.lastEmptyBlock(BlockManager.col);
+                        BlockManager.dropDownFlag = 1;
                         System.out.println("Down arrow key pressed");
                     }
                 }
@@ -131,22 +124,10 @@ public class GameBoardGUI extends JFrame {
         scoreLabel.setText(scoreLabelText);
     }
 
-    public void endOfGameDialog() {
+    public static void endOfGameDialog() {
         JOptionPane.showMessageDialog(mainFrame, "GAME OVER!  Final " +
                 "Score: " + Search.getScore());
     }
-
-    public int getColOffset() {
-        return colOffset;
-    }
-    public int getDropDown() {
-        return dropDown;
-    }
-    public int getPieceRotate() {
-        return pieceRotate;
-    }
-
-
 
     public static class Grid extends JPanel {
         private static ArrayList<String> fillCells;
