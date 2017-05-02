@@ -21,16 +21,26 @@ public class GameBoardGUI extends JFrame {
     public static Grid grid = new Grid();
     private BlockManager game = new BlockManager();
     private Timer timer;
-    private int colOffset;
-    private int dropDown;
-    private int pieceRotate;
+    int colOffset;
+    int dropDown;
+    int pieceRotate;
 
 
 
     public GameBoardGUI() {
 
+        mainFrame.setFocusable(false);
+        mainPanel.setFocusable(false);
+        topPanel.setFocusable(false);
+        bottomPanel.setFocusable(false);
+        gameBoard.setFocusable(false);
+        scoreLabel.setFocusable(false);
+        grid.setFocusable(false);
+
+
         toggleStart.addItemListener(e -> handleToggle(e));
         toggleStart.setForeground(Color.GREEN.darker().darker());
+
 
         mainPanel.setBackground(Color.black);
         mainPanel.add(topPanel, BorderLayout.PAGE_START);
@@ -47,38 +57,6 @@ public class GameBoardGUI extends JFrame {
         topPanel.add(scoreLabel);
 
         grid.setBackground(Color.LIGHT_GRAY);
-        mainFrame.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                int code = e.getKeyCode();
-                if (code == KeyEvent.VK_RIGHT) {
-                    colOffset = 1;
-                    System.out.println("Right arrow key pressed");
-                }
-                if (code == KeyEvent.VK_LEFT) {
-                    colOffset = -1;
-                    System.out.println("Left arrow key pressed");
-                }
-                if (code == KeyEvent.VK_UP) {
-                    pieceRotate = 1;
-                    System.out.println("Up arrow key pressed");
-                }
-                if (code == KeyEvent.VK_DOWN) {
-                    dropDown = 1;
-                    System.out.println("Down arrow key pressed");
-                }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-
-            }
-        });
         mainFrame.isFocusable();
         mainFrame.requestFocus();
 
@@ -91,7 +69,7 @@ public class GameBoardGUI extends JFrame {
 
         grid.fillCell(game.getBoardList());
 
-        timer = new Timer(500, e -> game.runGame());
+        timer = new Timer(5000, e -> game.runGame());
     }
 
     public void handleToggle(ItemEvent e) {
@@ -99,10 +77,52 @@ public class GameBoardGUI extends JFrame {
             timer.stop();
             toggleStart.setForeground(Color.GREEN.darker().darker());
             toggleStart.setText("START");
+            toggleStart.transferFocus();
         } else {
             timer.start();
             toggleStart.setForeground(Color.RED);
             toggleStart.setText("PAUSE");
+            toggleStart.setFocusable(true);
+            toggleStart.requestFocusInWindow();
+            toggleStart.requestFocus();
+            toggleStart.hasFocus();
+            toggleStart.addKeyListener(new KeyListener() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+
+                }
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    int code = e.getKeyCode();
+                    if (code == KeyEvent.VK_RIGHT) {
+                        if (BlockManager.col < BlockManager.COL - 1) {
+                            BlockManager.col = BlockManager.col + 1;
+                        }
+                        System.out.println("Right arrow key pressed");
+                    }
+                    if (code == KeyEvent.VK_LEFT) {
+                        if (BlockManager.col > 0) {
+                            BlockManager.col = BlockManager.col - 1;
+                        }
+                        System.out.println("Left arrow key pressed");
+                    }
+                    if (code == KeyEvent.VK_UP) {
+                        pieceRotate = 1;
+                        System.out.println("Up arrow key pressed");
+                    }
+                    if (code == KeyEvent.VK_DOWN) {
+                        BlockManager.row = game.lastEmptyBlock(BlockManager.col);
+                        System.out.println("Down arrow key pressed");
+                    }
+                }
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+
+                }
+            });
+
         }
     }
 

@@ -14,8 +14,8 @@ public class BlockManager {
     static final int COL = 10;
     private ArrayList<String> boardList;
     private static boolean advanceFlag = false;
-    private static int row;
-    private static int col;
+    static int row;
+    static int col;
     private static char[] piece = new char[3];
     boolean isSettled = false;
     boolean redraw = false;
@@ -83,10 +83,12 @@ public class BlockManager {
                         board[row - 2][col] = '-';
                         System.out.println(toString());
                         System.out.println("Current score " + Search.getScore() + ".");
+                        System.out.println("Current column: " + col);
                         GameBoardGUI.setScoreLabel("Current score: " + Search.getScore());
                         isSettled = false;
                         redraw = true;
                         GameBoardGUI.grid.fillCell(getBoardList());
+                        GameBoardGUI.grid.requestFocus();
                         break;
                     }
                 }
