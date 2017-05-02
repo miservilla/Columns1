@@ -114,10 +114,10 @@ class Search {
                 board[b++][col] = tmpColOccupied.get(a++);
             }
         }
-        if (repeat) {
-            bigCoordinates.clear();
-            search(board);
-        }
+//        if (repeat) {
+//            bigCoordinates.clear();
+//            search(board);
+//        }
     }
 
     /**

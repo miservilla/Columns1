@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -11,19 +10,17 @@ public class BlockManager {
 
     private char[][] board; //2D array for board.
     private static Random num = new Random(); //Number generator for piece making and column drop.
-    static final int ROW = 6;
-    static final int COL = 4;
+    static final int ROW = 16;
+    static final int COL = 10;
     private ArrayList<String> boardList;
     private static boolean advanceFlag = false;
-    private Timer timer;
     private static int row;
     private static int col;
     private static char[] piece = new char[3];
-    private static int tmpRow;
     boolean isSettled = false;
     boolean redraw = false;
-//    GameBoardGUI gameGUI = new GameBoardGUI();
-    GameBoardGUI.Grid newGrid = new GameBoardGUI.Grid();
+//    GameBoardGUI newGUI = new GameBoardGUI();
+
 
 
 
@@ -51,7 +48,6 @@ public class BlockManager {
     }
 
 
-//TODO Need to build offset limits to prevent off board or into full column.
     public void newPiece() {
         col = num.nextInt(COL);
         System.out.println("Next column is " + col + ".");
@@ -61,6 +57,9 @@ public class BlockManager {
                 board[i][col] = piece[i];
             }
             System.out.println(toString());
+            GameBoardGUI.grid.fillCell(getBoardList());
+            System.out.println("Current score " + Search.getScore() + ".");
+            newGUI.setScoreLabel("Current score: " + Search.getScore());
             advanceFlag = true;
             isSettled = false;
         } else {
@@ -85,6 +84,7 @@ public class BlockManager {
                         System.out.println(toString());
                         isSettled = false;
                         redraw = true;
+                        GameBoardGUI.grid.fillCell(getBoardList());
                         break;
                     }
                 }
@@ -92,6 +92,7 @@ public class BlockManager {
             if (col == COL && redraw == false) {
                 isSettled = true;
                 advanceFlag = false;
+                Search.search(board);
             }
         }
     }
@@ -123,16 +124,16 @@ public class BlockManager {
 //        advanceFlag = false;
 //    }
 
-    public void goSearch() {
-        board[tmpRow][col] = piece[0];
-        Search.search(board);
-        System.out.println("\nAfter blocks fall...");
-        System.out.println(toString());
-        System.out.println("Number of blocks removed " +
-                Search.getBlocksRemoved() + ".");
-        Search.setBlocksRemoved();
-        System.out.println("Current score " + Search.getScore() + ".");
-    }
+//    public void goSearch() {
+//        board[tmpRow][col] = piece[0];
+//        Search.search(board);
+//        System.out.println("\nAfter blocks fall...");
+//        System.out.println(toString());
+//        System.out.println("Number of blocks removed " +
+//                Search.getBlocksRemoved() + ".");
+//        Search.setBlocksRemoved();
+//        System.out.println("Current score " + Search.getScore() + ".");
+//    }
 
     /**
      * Overridden method of toString to output board to console.
