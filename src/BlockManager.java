@@ -81,19 +81,22 @@ public class BlockManager {
                 for (k = 0; k <= ROW - 2; k++) {
                     if (board[k][j] != '-' && board[k + 1][j] == '-') { //Checks to see if OK to advance.
                         if (board[k][j + columnOffset] == '-' && !Search.repeat && j + columnOffset > 0 &&
-                                j + columnOffset < COL-1 && pieceDropFlag == true) {
+                                j + columnOffset < COL-1 && pieceDropFlag) {
                             moveHorizontal(k, j);
                         }
-                        if (rotatePieceFlag == 1 && pieceDropFlag == true) {
+                        if (rotatePieceFlag == 1 && pieceDropFlag) {
                             rotatePiece(k, j);
                         }
-                        if (dropDownFlag == 1 && pieceDropFlag == true) {
+                        if (dropDownFlag == 1 && pieceDropFlag) {
                             dropDown(k, j);
                         }
-                        for (i = k; i > k - 3 ; i--) {
-                            board[i + 1][j] = board[i][j];
+                        if (dropDownFlag == 0) {
+                            for (i = k; i > k - 3; i--) {
+                                board[i + 1][j] = board[i][j];
+                            }
+                            board[k - 2][j] = '-';
                         }
-                        board[k - 2][j] = '-';
+                        dropDownFlag = 0;
                         System.out.println(toString());
                         System.out.println("Current score " + Search.getScore() + ".");
                         System.out.println("Current column: " + j);
@@ -207,7 +210,6 @@ public class BlockManager {
             board[lastEmptyBlock + i][col] = board[row + i][col];
             board[row + i][col] = '-';
         }
-        dropDownFlag = 0;
     }
 
 
