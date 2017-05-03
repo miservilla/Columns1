@@ -11,15 +11,11 @@ import java.util.*;
  * @author Michael Servilla
  * @version date 2017-04-30
  */
-public class GameBoardGUI extends JFrame {
+class GameBoardGUI extends JFrame {
     private static JFrame mainFrame = new JFrame("COLUMNS");
-    private JPanel mainPanel = new JPanel(new BorderLayout());
-    private JPanel topPanel = new JPanel();
-    private JPanel bottomPanel = new JPanel();
-    private JPanel gameBoard = new JPanel(new BorderLayout());
     private static JLabel scoreLabel = new JLabel("Score: ");
     private JToggleButton toggleStart = new JToggleButton("START", true);
-    public static Grid grid = new Grid();
+    static Grid grid = new Grid();
     private BlockManager game = new BlockManager();
     private Timer timer;
 
@@ -28,11 +24,15 @@ public class GameBoardGUI extends JFrame {
      * Constructor for GUI class using 1 JFrame, 4 JPanels, 1 JLabel,
      * 1 JToggleButton, and 1 timer.
      */
-    public GameBoardGUI() {
+    GameBoardGUI() {
         mainFrame.setFocusable(false);
+        JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setFocusable(false);
+        JPanel topPanel = new JPanel();
         topPanel.setFocusable(false);
+        JPanel bottomPanel = new JPanel();
         bottomPanel.setFocusable(false);
+        JPanel gameBoard = new JPanel(new BorderLayout());
         gameBoard.setFocusable(false);
         scoreLabel.setFocusable(false);
         grid.setFocusable(false);
@@ -73,7 +73,7 @@ public class GameBoardGUI extends JFrame {
      * Method to handle JToggleButton for start and pause.
      * @param e Event parameter.
      */
-    public void handleToggle(ItemEvent e) {
+    private void handleToggle(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {
             timer.stop();
             toggleStart.setForeground(Color.GREEN.darker().darker());
@@ -90,7 +90,7 @@ public class GameBoardGUI extends JFrame {
             toggleStart.addKeyListener(new KeyListener() {
                 /**
                  * Overidden method from KeyListener class, not used.
-                 * @param e
+                 * @param e Event parameter.
                  */
                 @Override
                 public void keyTyped(KeyEvent e) {
@@ -121,7 +121,7 @@ public class GameBoardGUI extends JFrame {
                 }
                 /**
                  * Overidden method from KeyListener class, not used.
-                 * @param e
+                 * @param e Event parameter.
                  */
                 @Override
                 public void keyReleased(KeyEvent e) {
@@ -133,13 +133,13 @@ public class GameBoardGUI extends JFrame {
      * Method to set scoreLabel to current score.
      * @param scoreLabelText Text value of game score.
      */
-    public static void setScoreLabel(String scoreLabelText) {
+    static void setScoreLabel(String scoreLabelText) {
         scoreLabel.setText(scoreLabelText);
     }
     /**
      * End of game dialog box.
      */
-    public static void endOfGameDialog() {
+    static void endOfGameDialog() {
         JOptionPane.showMessageDialog(mainFrame, "GAME OVER!  Final " +
                 "Score: " + Search.getScore());
     }
@@ -152,7 +152,7 @@ public class GameBoardGUI extends JFrame {
         /**
          * Grid construct that uses paintComponent method.
          */
-        public Grid() {
+        Grid() {
         }
         @Override
         protected void paintComponent(Graphics g) {
@@ -184,9 +184,9 @@ public class GameBoardGUI extends JFrame {
 
         /**
          * Method to take ArrayList of current board status and calls repaint.
-         * @param gridList
+         * @param gridList ArrayList with grid data.
          */
-        public void fillCell(ArrayList gridList) {
+        void fillCell(ArrayList gridList) {
             fillCells = new ArrayList(gridList);
             repaint();
         }
@@ -194,7 +194,7 @@ public class GameBoardGUI extends JFrame {
         /**
          * Method that uses switch statement to determine block color.
          * @param colorCode Letters that correspond to colors.
-         * @return
+         * @return Returns color for each block.
          */
         Color getColor( String colorCode) {
             Color cellColor = Color.LIGHT_GRAY;

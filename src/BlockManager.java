@@ -13,17 +13,13 @@ public class BlockManager {
     private static Random num = new Random(); //Number generator for piece making and column drop.
     static final int ROW = 16;
     static final int COL = 10;
-    private ArrayList<String> boardList;
     private static boolean advanceFlag = false;
-    static int row;
-    static int col;
-    private static char[] piece = new char[3];
-    boolean isSettled = false;
-    boolean redraw = false;
+    private boolean isSettled = false;
+    private boolean redraw = false;
     static int columnOffset = 0;
     static int dropDownFlag = 0;
     static int rotatePieceFlag = 0;
-    static boolean pieceDropFlag = false;
+    private static boolean pieceDropFlag = false;
 
     /**
      * Constructor to build board with designated row and column size. Fills in
@@ -42,7 +38,7 @@ public class BlockManager {
      * Method to that takes timer tick, and determines if new piece is needed to
      * be created, or current piece needs to advance down the board.
      */
-    public void runGame() {
+    void runGame() {
         if (advanceFlag) {
             redraw = false;
             advanceOne();
@@ -54,11 +50,11 @@ public class BlockManager {
      * Method that requests piece to be made, and then determines what column
      * to drop it in. Also checks to see if column is full, and ends game if so.
      */
-    public void newPiece() {
-        col = num.nextInt(COL);
+    private void newPiece() {
+        int col = num.nextInt(COL);
         System.out.println("Next column is " + col + ".");
         if (!isFull(col)) {
-            piece = PieceMaker.getPiece();
+            char[] piece = PieceMaker.getPiece();
             for (int i = 0; i < 3; i++) {
                 board[i][col] = piece[i];
             }
@@ -78,7 +74,7 @@ public class BlockManager {
      * Method to to test board for empty spaces below pieces, advance the piece,
      * and respond to arrow keys.
      */
-    public void advanceOne() {
+    private void advanceOne() {
         int i; // "i" is for piece advance loop.
         int j; //"j" is for column loop.
         int k; //"k" is for row loop.
@@ -159,8 +155,8 @@ public class BlockManager {
      * Method to create ArrayList of Strings recreating String representation of board.
      * @return Returns ArrayList of Strings.
      */
-    public ArrayList<String> getBoardList() {
-        boardList = new ArrayList<>();
+    ArrayList<String> getBoardList() {
+        ArrayList<String> boardList = new ArrayList<>();
         for (int row = 0; row < ROW; row++) {
             for (int col = 0; col < COL; col++) {
                 String blockLine = row * 5 + " " + col * 5 + " " + board[row][col];
@@ -175,7 +171,7 @@ public class BlockManager {
      * @param col Randomly chosen column.
      * @return True if full, false otherwise.
      */
-    public boolean isFull(int col) {
+    private boolean isFull(int col) {
         int a = 0;
         for (int i = 0; i < ROW; i++) {
             if (board[i][col] == '-') {
@@ -189,7 +185,7 @@ public class BlockManager {
      * @param col Column to be checked.
      * @return Returns int of bottom row number.
      */
-    public int getLastEmptyBlock(int col){
+    private int getLastEmptyBlock(int col){
         int a = 0;
         for (int i = 0; i < ROW; i++) {
             if (board[i][col] == '-')
@@ -202,7 +198,7 @@ public class BlockManager {
      * @param row Row number of lowest block.
      * @param col Column of current piece.
      */
-    public void moveHorizontal(int row, int col) {
+    private void moveHorizontal(int row, int col) {
         for (int i = 0; i > -3; i--) {
             board[row + i][col + columnOffset] = board[row + i][col];
             board[row + i][col] = '-';
@@ -214,7 +210,7 @@ public class BlockManager {
      * @param row Row number of the lowest block.
      * @param col Column of the current piece.
      */
-    public void rotatePiece(int row, int col) {
+    private void rotatePiece(int row, int col) {
         char tmpBlock = board[row][col];
         board[row][col] = board[row - 1][col];
         board[row - 1][col] = board[row - 2][col];
@@ -226,7 +222,7 @@ public class BlockManager {
      * @param row Row number of the lowest block.
      * @param col Column of the current piece.
      */
-    public void dropDown(int row, int col) {
+    private void dropDown(int row, int col) {
         int lastEmptyBlock = getLastEmptyBlock(col);
         for (int i = 0; i > -3 ; i--) {
             board[lastEmptyBlock + i][col] = board[row + i][col];
@@ -245,7 +241,7 @@ public class BlockManager {
          * Static method to randomly create a piece object.
          * @return Returns a char array of size 3.
          */
-       public static char[] getPiece() {
+       static char[] getPiece() {
             for (int i = 0; i < 3; i++) {
                 int n = num.nextInt(4);
                 piece[i] = block[n];
