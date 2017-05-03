@@ -52,21 +52,21 @@ public class BlockManager {
      */
     private void newPiece() {
         int col = num.nextInt(COL);
-        System.out.println("Next column is " + col + ".");
+//        System.out.println("Next column is " + col + ".");
         if (!isFull(col)) {
             char[] piece = PieceMaker.getPiece();
             for (int i = 0; i < 3; i++) {
                 board[i][col] = piece[i];
             }
-            System.out.println(toString());
+//            System.out.println(toString());
             GameBoardGUI.grid.fillCell(getBoardList());
-            System.out.println("Current score " + Search.getScore() + ".");
+//            System.out.println("Current score " + Search.getScore() + ".");
             GameBoardGUI.setScoreLabel("Current score: " + Search.getScore());
             advanceFlag = true;
             isSettled = false;
             pieceDropFlag = true;
         } else {
-            System.out.println("Column is full!");
+//            System.out.println("Column is full!");
             GameBoardGUI.endOfGameDialog();
         }
     }
@@ -102,9 +102,9 @@ public class BlockManager {
                             board[k - 2][j] = '-';
                         }
                         dropDownFlag = 0;
-                        System.out.println(toString());
-                        System.out.println("Current score " + Search.getScore() + ".");
-                        System.out.println("Current column: " + j);
+//                        System.out.println(toString());
+//                        System.out.println("Current score " + Search.getScore() + ".");
+//                        System.out.println("Current column: " + j);
                         GameBoardGUI.setScoreLabel("Current score: " + Search.getScore());
                         isSettled = false;
                         redraw = true;
@@ -123,8 +123,8 @@ public class BlockManager {
                 Search.setBlocksRemoved();
                 pieceDropFlag = false;
                 if (Search.repeat) {
-                    System.out.println(toString());
-                    System.out.println("Current score " + Search.getScore() + ".");
+//                    System.out.println(toString());
+//                    System.out.println("Current score " + Search.getScore() + ".");
                     GameBoardGUI.setScoreLabel("Current score: " + Search.getScore());
                     isSettled = false;
                     redraw = true;
