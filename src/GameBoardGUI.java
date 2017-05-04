@@ -101,23 +101,6 @@ class GameBoardGUI extends JFrame {
                  */
                 @Override
                 public void keyPressed(KeyEvent e) {
-                    int code = e.getKeyCode();
-                    if (code == KeyEvent.VK_RIGHT) {
-                        BlockManager.columnOffset = 1;
-                        System.out.println("Right arrow key pressed");
-                    }
-                    if (code == KeyEvent.VK_LEFT) {
-                        BlockManager.columnOffset = -1;
-                        System.out.println("Left arrow key pressed");
-                    }
-                    if (code == KeyEvent.VK_UP) {
-                        BlockManager.rotatePieceFlag = 1;
-                        System.out.println("Up arrow key pressed");
-                    }
-                    if (code == KeyEvent.VK_DOWN) {
-                        BlockManager.dropDownFlag = 1;
-                        System.out.println("Down arrow key pressed");
-                    }
                 }
                 /**
                  * Overidden method from KeyListener class, not used.
@@ -125,6 +108,23 @@ class GameBoardGUI extends JFrame {
                  */
                 @Override
                 public void keyReleased(KeyEvent e) {
+                    int code = e.getKeyCode();
+                    if (code == KeyEvent.VK_RIGHT && game.getJ() < BlockManager.COL - 1) {
+                        BlockManager.columnOffset = 1;
+//            System.out.println("Right arrow key pressed");
+                    }
+                    if (code == KeyEvent.VK_LEFT && game.getJ() > 2) {
+                        BlockManager.columnOffset = -1;
+//            System.out.println("Left arrow key pressed");
+                    }
+                    if (code == KeyEvent.VK_UP) {
+                        BlockManager.rotatePieceFlag = 1;
+//            System.out.println("Up arrow key pressed");
+                    }
+                    if (code == KeyEvent.VK_DOWN) {
+                        BlockManager.dropDownFlag = 1;
+//            System.out.println("Down arrow key pressed");
+                    }
                 }
             });
         }

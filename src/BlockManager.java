@@ -20,6 +20,7 @@ public class BlockManager {
     static int dropDownFlag = 0;
     static int rotatePieceFlag = 0;
     private static boolean pieceDropFlag = false;
+    private int j; //"j" is for column loop.
 
     /**
      * Constructor to build board with designated row and column size. Fills in
@@ -76,7 +77,7 @@ public class BlockManager {
      */
     private void advanceOne() {
         int i; // "i" is for piece advance loop.
-        int j; //"j" is for column loop.
+//        int j; //"j" is for column loop.
         int k; //"k" is for row loop.
         if (!isSettled) {
             for (j = 0; j < COL; j++) {
@@ -85,8 +86,8 @@ public class BlockManager {
                 }
                 for (k = 0; k <= ROW - 2; k++) {
                     if (board[k][j] != '-' && board[k + 1][j] == '-') { //Checks to see if OK to advance.
-                        if (board[k][j + columnOffset] == '-' && !Search.repeat && j + columnOffset >= 0 &&
-                                j + columnOffset < COL && pieceDropFlag) {
+                        if (board[k][j + columnOffset] == '-' &&
+                                !Search.repeat && pieceDropFlag) {
                             moveHorizontal(k, j);
                         }
                         if (rotatePieceFlag == 1 && pieceDropFlag) {
@@ -118,8 +119,8 @@ public class BlockManager {
                 isSettled = true;
                 advanceFlag = false;
                 Search.search(board);
-                System.out.println("Number of blocks removed " +
-                Search.getBlocksRemoved() + ".");
+//                System.out.println("Number of blocks removed " +
+//                Search.getBlocksRemoved() + ".");
                 Search.setBlocksRemoved();
                 pieceDropFlag = false;
                 if (Search.repeat) {
@@ -135,6 +136,9 @@ public class BlockManager {
                 }
             }
         }
+    }
+    public int getJ() {
+        return j;
     }
     /**
      * Overridden method of toString to output board to console.
